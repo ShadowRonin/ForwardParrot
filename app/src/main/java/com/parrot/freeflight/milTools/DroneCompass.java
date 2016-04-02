@@ -1,26 +1,21 @@
-
+package com.parrot.freeflight.milTools;
 public class DroneCompass {
     
-    private double northInDegMag;
-    private double latestRotZ;
-    
-    public DroneCompass() {
-        latestRotZ = 0;
-        markNorth();
-    }
+    private static double northInDegMag = 0.0;
+    private static double latestRotZ = 0.0;
     
     /* Nav data updates this as frequently as it wants */
-    public void updateRotZ(double rotZ) {
+    public static void updateRotZ(double rotZ) {
         latestRotZ = rotZ;
     }
     
     /* UI calls this on command */
-    public void markNorth() {
+    public static void markNorth() {
         northInDegMag = latestRotZ;
     }
     
     /* UI calls this at set frequency */
-    public int getAzimuthInMils() {
+    public static int getAzimuthInMils() {
         
         double azInDegrees = latestRotZ - northInDegMag;
         int azInMils = (int) (azInDegrees * (6400 / 360));
