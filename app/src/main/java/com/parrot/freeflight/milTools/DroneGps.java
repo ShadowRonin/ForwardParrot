@@ -34,14 +34,22 @@ import com.ibm.util.CoordinateConversion;
 public class DroneGps {
     LocationManager locationManager;
     Context mContext;
-    double lat = 0.0;
-    double lng = 0.0;
+    double lat;
+    double lng;
     public DroneGps(Context mContext){
+        lat=0.0;
+        lng =0.0;
         this.mContext = mContext;
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
-        LocationListener locationListener = new MyLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        ContentResolver contentResolver = mContext.getContentResolver();
+        boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
+
+
+        if (gpsStatus) {
+            LocationListener locationListener = new MyLocationListener();
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        }
 
     }
     public String getEightGrid(){

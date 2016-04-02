@@ -39,6 +39,9 @@ import com.parrot.freeflight.ui.hud.ToggleButton;
 import com.parrot.freeflight.utils.FontUtils.TYPEFACE;
 import com.parrot.freeflight.video.VideoStageRenderer;
 import com.parrot.freeflight.video.VideoStageView;
+import com.parrot.freeflight.milTools.*;
+
+import static com.parrot.freeflight.milTools.DroneCompass.*;
 
 public class HudViewController 
 	implements OnTouchListener,
@@ -74,6 +77,8 @@ public class HudViewController
 	private static final int BACK_BTN_ID = 18;
 	private static final int LAND_ID = 19;
     private static final int OVERLAY_ID = 20;
+    private static final int LEFTTEXT_ID=21;
+    private static final int RIGHTTEXT_ID =22;
 	
 	private Image bottomBarBg;
     private Image overlayImg;
@@ -99,6 +104,9 @@ public class HudViewController
 	private Text txtAlert;
 	private Text txtRecord;
 	private Text txtUsbRemaining;
+
+    private Text leftText;
+    private Text rightText;
 	
 	private GLSurfaceView glView;
 	private VideoStageView canvasView;
@@ -115,7 +123,7 @@ public class HudViewController
 
 	private SparseIntArray emergencyStringMap;
 
-	public HudViewController(Activity context, boolean useSoftwareRendering)
+	public HudViewController(final Activity context, boolean useSoftwareRendering)
 	{
 	    joypadOpacity = 1f;
 		this.context = context;
@@ -171,9 +179,16 @@ public class HudViewController
 		bottomBarBg.setSizeParams(SizeParams.FILL_SCREEN, SizeParams.NONE);
 		bottomBarBg.setAlphaEnabled(false);
 
-        overlayImg = new Image(res, R.drawable.transparent5, Align.CENTER);
+        overlayImg = new Image(res, R.drawable.shortimg, Align.CENTER);
         overlayImg.setSizeParams(SizeParams.FILL_SCREEN, SizeParams.NONE);
         overlayImg.setAlphaEnabled(true);
+
+
+        /*TextView textView = new TextView(this);
+        textView.setText(textArray[i]);
+        linearLayout.addView(textView);*/
+        /*leftText = new TextView(this);
+        leftText.setText("Test");*/
 
 	    btnPhoto = new Button(res, R.drawable.btn_photo, R.drawable.btn_photo_pressed, Align.TOP_RIGHT);
 		btnRecord = new ToggleButton(res, R.drawable.btn_record, R.drawable.btn_record_pressed, 
@@ -207,14 +222,14 @@ public class HudViewController
 		};
 		
 		batteryIndicator = new Indicator(res, batteryIndicatorRes, Align.TOP_LEFT);
-		batteryIndicator.setMargin(0, 0, 0, (int)res.getDimension(R.dimen.hud_battery_indicator_margin_left));
+		batteryIndicator.setMargin(0, 0, 0, (int) res.getDimension(R.dimen.hud_battery_indicator_margin_left));
 		
 		txtBatteryStatus = new Text(context, "0%", Align.TOP_LEFT);
 		txtBatteryStatus.setMargin((int) res.getDimension(R.dimen.hud_battery_text_margin_top), 0, 0,
                 (int) res.getDimension(R.dimen.hud_battery_indicator_margin_left) + batteryIndicator.getWidth());
 		txtBatteryStatus.setTextColor(Color.WHITE);
 		txtBatteryStatus.setTypeface(TYPEFACE.Helvetica(context));
-		txtBatteryStatus.setTextSize((int)res.getDimension(R.dimen.hud_battery_text_size));
+		txtBatteryStatus.setTextSize((int) res.getDimension(R.dimen.hud_battery_text_size));
 		
 
 		int wifiIndicatorRes[] = {
@@ -241,11 +256,20 @@ public class HudViewController
 		txtAlert = new Text(context, "", Align.TOP_CENTER);
 		txtAlert.setMargin((int) res.getDimension(R.dimen.hud_alert_text_margin_top), 0, 0, 0);
 		txtAlert.setTextColor(Color.RED);
-		txtAlert.setTextSize((int) res.getDimension(R.dimen.hud_alert_text_size));
+        txtAlert.setTextSize((int) res.getDimension(R.dimen.hud_alert_text_size));
 		txtAlert.setBold(true);
 		txtAlert.blink(true);
 
-		renderer.addSprite(TOP_BAR_ID, topBarBg);
+        new Thread(new Runnable() {
+            public void run() {
+                textUpdateThread txtUpdate = new textUpdateThread(renderer, context);
+            }
+        }).start();
+
+
+
+
+        renderer.addSprite(TOP_BAR_ID, topBarBg);
 		renderer.addSprite(BOTTOM_BAR_ID, bottomBarBg);
 
         renderer.addSprite(SETTINGS_ID, btnSettings);
@@ -264,6 +288,8 @@ public class HudViewController
 		renderer.addSprite(USB_INDICATOR_ID, usbIndicator);
 		renderer.addSprite(USB_INDICATOR_TEXT_ID, txtUsbRemaining);
         renderer.addSprite(OVERLAY_ID, overlayImg);
+        //renderer.addSprite(LEFTTEXT_ID, leftText);
+        //renderer.addSprite(RIGHTTEXT_ID, rightText);
 
 
 	}
@@ -735,6 +761,25 @@ public class HudViewController
 	    Log.w(TAG, "Can't find root view");
 	    return null;
 	}
+    int test = 0;
+    public void getAzimuth (){
+        final int[] azimuth = {0};
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        azimuth[0] = DroneCompass.getAzimuthInMils();
+                    }
+                },
+                300);
+
+        String azString = "" + azimuth[0];
+        test++;
+        leftText.setText(""+test);
+        renderer.addSprite(LEFTTEXT_ID, leftText);
+        //leftText.setText(azString);
+
+        getAzimuth();
+    }
 
 
     public void setEmergencyButtonEnabled(boolean enabled)
