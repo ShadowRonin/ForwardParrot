@@ -3,7 +3,7 @@ package com.parrot.freeflight.sensors;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import com.parrot.freeflight.milTools.*;
 import android.annotation.TargetApi;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -324,6 +324,7 @@ implements Runnable
 
         // get the gyroscope based orientation from the rotation matrix
         SensorManager.getOrientation(gyroRotationMatrix, gyroOrientation);
+        DroneCompass.updateRotZ((double)gyroOrientation[2]);
     }
     
  

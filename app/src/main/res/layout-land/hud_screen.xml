@@ -3,19 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ControlDroneActivity"
-    android:id="@+id/hudScreenRL">
-
-<!--
-    <include
-        android:id="@+id/drone_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        layout="@layout/drone_overlay"/>
--->
-
-
+    tools:context=".activities.ControlDroneActivity" >
 
     <ImageView
         android:id="@+id/imageView1"
@@ -78,7 +66,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/btn_emergency_normal" />
-<!--
+
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="match_parent"
@@ -87,7 +75,6 @@
         android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
         android:src="@drawable/barre_bas" />
-        -->
 
     <ImageView
         android:id="@+id/imageView6"
@@ -174,7 +161,5 @@
         android:layout_marginBottom="@dimen/hud_joy_margin"
         android:layout_marginRight="@dimen/hud_joy_margin"
         android:src="@drawable/joystick_halo" />
-
-
 
 </RelativeLayout>
