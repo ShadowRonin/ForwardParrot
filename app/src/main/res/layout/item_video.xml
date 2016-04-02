@@ -10,6 +10,12 @@
     android:padding="5dip"
     android:persistentDrawingCache="all" >
 
+    <include
+        android:id="@+id/drone_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/drone_overlay"/>
+
     <ViewStub
         android:id="@+id/video_view_stub"
         android:layout_width="match_parent"

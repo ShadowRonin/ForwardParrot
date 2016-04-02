@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parrot.freeflight.R;
@@ -72,8 +73,10 @@ public class HudViewController
 	private static final int USB_INDICATOR_TEXT_ID = 17;
 	private static final int BACK_BTN_ID = 18;
 	private static final int LAND_ID = 19;
+    private static final int OVERLAY_ID = 20;
 	
 	private Image bottomBarBg;
+    private Image overlayImg;
 	
 	private Button btnSettings;
 	private Button btnTakeOff;
@@ -116,6 +119,7 @@ public class HudViewController
 	{
 	    joypadOpacity = 1f;
 		this.context = context;
+        //this.useSoftwareRendering = false;
 		this.useSoftwareRendering = useSoftwareRendering;
 		gestureDetector = new EnhancedGestureDetector(context, this);
 		
@@ -149,7 +153,7 @@ public class HudViewController
 		Resources res = context.getResources();
 
 		btnSettings = new Button(res, R.drawable.btn_settings, R.drawable.btn_settings_pressed, Align.TOP_LEFT);
-		btnSettings.setMargin(0, 0, 0, (int)res.getDimension(R.dimen.hud_btn_settings_margin_left));
+		btnSettings.setMargin(0, 0, 0, (int) res.getDimension(R.dimen.hud_btn_settings_margin_left));
 		
 		btnBack = new Button(res, R.drawable.btn_back, R.drawable.btn_back_pressed, Align.TOP_LEFT);
 		btnBack.setMargin(0, 0, 0, res.getDimensionPixelOffset(R.dimen.hud_btn_back_margin_left));
@@ -166,7 +170,10 @@ public class HudViewController
 		bottomBarBg = new Image(res, R.drawable.barre_bas, Align.BOTTOM_CENTER);
 		bottomBarBg.setSizeParams(SizeParams.FILL_SCREEN, SizeParams.NONE);
 		bottomBarBg.setAlphaEnabled(false);
-		
+
+        overlayImg = new Image(res, R.drawable.transparent5, Align.CENTER);
+        overlayImg.setSizeParams(SizeParams.FILL_SCREEN, SizeParams.NONE);
+        overlayImg.setAlphaEnabled(true);
 
 	    btnPhoto = new Button(res, R.drawable.btn_photo, R.drawable.btn_photo_pressed, Align.TOP_RIGHT);
 		btnRecord = new ToggleButton(res, R.drawable.btn_record, R.drawable.btn_record_pressed, 
@@ -175,7 +182,7 @@ public class HudViewController
 		btnRecord.setMargin(0, res.getDimensionPixelOffset(R.dimen.hud_btn_rec_margin_right), 0, 0);
 		
 		txtRecord = new Text(context, "REC", Align.TOP_RIGHT);
-		txtRecord.setMargin((int)res.getDimension(R.dimen.hud_rec_text_margin_top), (int)res.getDimension(R.dimen.hud_rec_text_margin_right), 0, 0);
+		txtRecord.setMargin((int) res.getDimension(R.dimen.hud_rec_text_margin_top), (int) res.getDimension(R.dimen.hud_rec_text_margin_right), 0, 0);
 		txtRecord.setTextColor(Color.WHITE);
 		txtRecord.setTypeface(TYPEFACE.Helvetica(context));
 		txtRecord.setTextSize(res.getDimensionPixelSize(R.dimen.hud_rec_text_size));
@@ -185,8 +192,8 @@ public class HudViewController
 		
 		prevRemainingTime = -1;
 		txtUsbRemaining = new Text(context, "KO", Align.TOP_RIGHT);
-		txtUsbRemaining.setMargin(res.getDimensionPixelOffset(R.dimen.hud_usb_indicator_text_margin_top), 
-									res.getDimensionPixelOffset(R.dimen.hud_usb_indicator_text_margin_right), 0, 0);
+		txtUsbRemaining.setMargin(res.getDimensionPixelOffset(R.dimen.hud_usb_indicator_text_margin_top),
+                res.getDimensionPixelOffset(R.dimen.hud_usb_indicator_text_margin_right), 0, 0);
 		txtUsbRemaining.setTypeface(TYPEFACE.Helvetica(context));
 		txtUsbRemaining.setTextSize(res.getDimensionPixelSize(R.dimen.hud_usb_indicator_text_size));
 		
@@ -203,8 +210,8 @@ public class HudViewController
 		batteryIndicator.setMargin(0, 0, 0, (int)res.getDimension(R.dimen.hud_battery_indicator_margin_left));
 		
 		txtBatteryStatus = new Text(context, "0%", Align.TOP_LEFT);
-		txtBatteryStatus.setMargin((int)res.getDimension(R.dimen.hud_battery_text_margin_top),0,0, 			
-									(int)res.getDimension(R.dimen.hud_battery_indicator_margin_left) + batteryIndicator.getWidth());
+		txtBatteryStatus.setMargin((int) res.getDimension(R.dimen.hud_battery_text_margin_top), 0, 0,
+                (int) res.getDimension(R.dimen.hud_battery_indicator_margin_left) + batteryIndicator.getWidth());
 		txtBatteryStatus.setTextColor(Color.WHITE);
 		txtBatteryStatus.setTypeface(TYPEFACE.Helvetica(context));
 		txtBatteryStatus.setTextSize((int)res.getDimension(R.dimen.hud_battery_text_size));
@@ -232,15 +239,16 @@ public class HudViewController
 		
 		
 		txtAlert = new Text(context, "", Align.TOP_CENTER);
-		txtAlert.setMargin((int)res.getDimension(R.dimen.hud_alert_text_margin_top), 0, 0, 0);
+		txtAlert.setMargin((int) res.getDimension(R.dimen.hud_alert_text_margin_top), 0, 0, 0);
 		txtAlert.setTextColor(Color.RED);
-		txtAlert.setTextSize((int)res.getDimension(R.dimen.hud_alert_text_size));
+		txtAlert.setTextSize((int) res.getDimension(R.dimen.hud_alert_text_size));
 		txtAlert.setBold(true);
 		txtAlert.blink(true);
 
 		renderer.addSprite(TOP_BAR_ID, topBarBg);
 		renderer.addSprite(BOTTOM_BAR_ID, bottomBarBg);
-		renderer.addSprite(SETTINGS_ID, btnSettings);
+
+        renderer.addSprite(SETTINGS_ID, btnSettings);
 		renderer.addSprite(BACK_BTN_ID, btnBack);
 		renderer.addSprite(PHOTO_ID, btnPhoto);
 		renderer.addSprite(RECORD_ID, btnRecord);
@@ -255,7 +263,11 @@ public class HudViewController
 		renderer.addSprite(RECORD_LABEL_ID, txtRecord);
 		renderer.addSprite(USB_INDICATOR_ID, usbIndicator);
 		renderer.addSprite(USB_INDICATOR_TEXT_ID, txtUsbRemaining);
+        renderer.addSprite(OVERLAY_ID, overlayImg);
+
+
 	}
+
 	
 	
 	private void initNavdataStrings()

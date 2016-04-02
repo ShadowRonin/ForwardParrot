@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         layout="@layout/incl_status_bar" />
 
+
     <include
         android:id="@+id/navigation_bar"
         android:layout_width="fill_parent"
