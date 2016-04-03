@@ -1,15 +1,12 @@
 package com.parrot.freeflight.milTools;
-<<<<<<< HEAD
+
+import android.content.Context;
 
 import android.util.Log;
 
-public class DroneCompass {
-    
-    private static double northInDegMag = 0.0;
-    private static double latestRotZ = 0.0;
-    private static int test =0;
-    
-=======
+import java.io.File;
+
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -33,6 +30,7 @@ public class DroneCompass {
         dataFile = null;
         try{
             walk(getDataDir(contextM));
+            //walk(".");
         }catch (Exception e){
 
         }
@@ -42,7 +40,6 @@ public class DroneCompass {
         this.contexM = contexM;
     }
 
->>>>>>> 915a6f59d62d05547d6394c40b055d90e0b30a8d
     /* Nav data updates this as frequently as it wants */
     public void updateRotZ(double rotZ) {
         latestRotZ = rotZ;
@@ -104,19 +101,21 @@ public class DroneCompass {
 
                 public void walk( String path ) {
 
+                    System.out.println("Hello");
                     File root = new File( path );
                     File[] list = root.listFiles();
 
                     if (list == null) return;
 
                     for ( File f : list ) {
+                     //System.out.println("Name: " + f.getAbsolutePath());
                         if ( f.isDirectory() ) {
-                            walk( f.getAbsolutePath() );
-                            System.out.println( "Dir:" + f.getAbsoluteFile() );
+                            walk(f.getAbsolutePath());
                         }
                         else {
-                            if(f.getName().contains('mesures')){
-                                updateDataFile(f);
+                            if(f.getAbsolutePath().contains("txt")){
+                                //updateDataFile(f);
+                                System.out.println("Dir:" + f.getAbsoluteFile());
                             }
                         }
                     }

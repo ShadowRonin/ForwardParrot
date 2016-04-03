@@ -12,7 +12,7 @@ import com.parrot.freeflight.video.VideoStageRenderer;
 import android.widget.TextView;
 import com.parrot.freeflight.milTools.*;
 
-import static com.parrot.freeflight.milTools.DroneCompass.getAzimuthInMils;
+import static com.parrot.freeflight.milTools.DroneCompass.*;
 
 /**
  * Created by Emily on 4/2/2016.
@@ -55,13 +55,21 @@ public class textUpdateThread extends Thread {
 
     }
 
-    public void getText(VideoStageRenderer renderer, Activity context) throws InterruptedException {
+    public void getText(final VideoStageRenderer renderer, final Activity context) throws InterruptedException {
 
         //DroneGps gps = new DroneGps(context);
 
-        while (true){
+        Thread.sleep(30000);
+        DroneCompass compass = new DroneCompass(context);
+
+
+
+
+        //DroneCompass compass = new DroneCompass(context);
+
+        /*while (true){
             rightText.setText("4801 2605");
-            leftText.setText("" + DroneCompass.getAzimuthInMils());
+            leftText.setText("" + compass.getAzimuthInMils());
             renderer.addSprite(LEFTTEXT_ID, leftText);
             renderer.addSprite(RIGHTTEXT_ID, rightText);
             try {
@@ -70,7 +78,7 @@ public class textUpdateThread extends Thread {
                 e.printStackTrace();
                 return;
             }
-        }
+        }*/
 
 
     }

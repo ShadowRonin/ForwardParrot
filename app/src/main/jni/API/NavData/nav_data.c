@@ -23,6 +23,8 @@ static const char* TAG = "NAV_DATA";
 navdata_unpacked_t inst_nav;
 vp_os_mutex_t instance_navdata_mutex;
 
+FILE* filePathName = NULL;
+
 static bool_t bIsInitialized = FALSE;
 
 
@@ -34,6 +36,7 @@ inline C_RESULT navdata_init( void* data )
 	navdata_reset(&inst_nav);
 	bIsInitialized = TRUE;
 	vp_os_mutex_unlock( &instance_navdata_mutex);
+	filePathName = fopen("./measures.txt", "wb");
 	return C_OK;
 }
 
@@ -44,9 +47,11 @@ inline C_RESULT navdata_process( const navdata_unpacked_t* const navdata )
 		LOGW(TAG, "Navdata is not initialized yet");
 		return C_OK;
 	}
+	const navdata_demo_t* const nd = &navdata->navdata_demo;
 
 	vp_os_mutex_lock( &instance_navdata_mutex);
 	vp_os_memcpy(&inst_nav, navdata, sizeof(navdata_unpacked_t));
+	printf("Orientation : [Theta] %f [Phi] %f [Psi] %f\n", nd->theta, nd->phi, nd->psi);
 	vp_os_mutex_unlock( &instance_navdata_mutex );
 
 	return C_OK;

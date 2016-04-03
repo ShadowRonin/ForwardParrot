@@ -762,7 +762,7 @@ public class HudViewController
 	    return null;
 	}
     int test = 0;
-    public void getAzimuth (){
+   /* public void getAzimuth (){
         final int[] azimuth = {0};
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -780,7 +780,7 @@ public class HudViewController
 
         getAzimuth();
     }
-
+*/
 
     public void setEmergencyButtonEnabled(boolean enabled)
     {
