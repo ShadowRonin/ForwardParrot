@@ -1,6 +1,7 @@
 package com.parrot.freeflight.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,6 +12,8 @@ import com.parrot.freeflight.ui.hud.Text;
 import com.parrot.freeflight.video.VideoStageRenderer;
 import android.widget.TextView;
 import com.parrot.freeflight.milTools.*;
+
+import java.io.FileOutputStream;
 
 import static com.parrot.freeflight.milTools.DroneCompass.*;
 
@@ -59,15 +62,13 @@ public class textUpdateThread extends Thread {
 
         //DroneGps gps = new DroneGps(context);
 
-        Thread.sleep(30000);
+//        Thread.sleep(30000);
+//        DroneCompass compass = new DroneCompass(context);
+
+
         DroneCompass compass = new DroneCompass(context);
 
-
-
-
-        //DroneCompass compass = new DroneCompass(context);
-
-        /*while (true){
+        while (true){
             rightText.setText("4801 2605");
             leftText.setText("" + compass.getAzimuthInMils());
             renderer.addSprite(LEFTTEXT_ID, leftText);
@@ -78,10 +79,11 @@ public class textUpdateThread extends Thread {
                 e.printStackTrace();
                 return;
             }
-        }*/
+        }
 
 
     }
+
 
 
 

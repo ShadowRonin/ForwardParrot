@@ -36,7 +36,10 @@ inline C_RESULT navdata_init( void* data )
 	navdata_reset(&inst_nav);
 	bIsInitialized = TRUE;
 	vp_os_mutex_unlock( &instance_navdata_mutex);
-	filePathName = fopen("./measures.txt", "wb");
+	filePathName = fopen("/tmp/measures.txt", "w+");
+	fprintf(filePathName, "This is testing for fprintf...\n");
+	fputs("This is testing for fputs...\n", filePathName);
+	fclose(filePathName);
 	return C_OK;
 }
 
@@ -51,7 +54,9 @@ inline C_RESULT navdata_process( const navdata_unpacked_t* const navdata )
 
 	vp_os_mutex_lock( &instance_navdata_mutex);
 	vp_os_memcpy(&inst_nav, navdata, sizeof(navdata_unpacked_t));
-	printf("Orientation : [Theta] %f [Phi] %f [Psi] %f\n", nd->theta, nd->phi, nd->psi);
+	//fprintf(filePathName, "Orientation : [Theta] %f [Phi] %f [Psi] %f\n", nd->theta, nd->phi, nd->psi);
+	fputs(filePathName, "Test...\n");
+	fclose(filePathName);
 	vp_os_mutex_unlock( &instance_navdata_mutex );
 
 	return C_OK;
@@ -63,6 +68,7 @@ inline C_RESULT navdata_release( void )
 	LOGI(TAG, "navdata_release");
 	vp_os_mutex_destroy(&instance_navdata_mutex);
 	bIsInitialized = FALSE;
+	fclose(filePathName);
     return C_OK;
 }
 

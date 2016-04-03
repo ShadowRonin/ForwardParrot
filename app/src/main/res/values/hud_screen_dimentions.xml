@@ -22,5 +22,6 @@
     <dimen name="hud_popup_width">380dp</dimen>
     <dimen name="hud_popup_height">75dp</dimen>
     <dimen name="hud_popup_text_size">16sp</dimen>
-    <dimen name="hud_joy_margin">25dp</dimen> 
+    <dimen name="hud_joy_margin">25dp</dimen>
+   <dimen name = "markNorth_margin">3dp</dimen>
 </resources>

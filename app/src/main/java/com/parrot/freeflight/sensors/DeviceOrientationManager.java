@@ -324,7 +324,7 @@ implements Runnable
 
         // get the gyroscope based orientation from the rotation matrix
         SensorManager.getOrientation(gyroRotationMatrix, gyroOrientation);
-        //fDroneCompass.updateRotZ((double)gyroOrientation[2]);
+        DroneCompass.updateRotZ((double)gyroOrientation[0]);
     }
     
  

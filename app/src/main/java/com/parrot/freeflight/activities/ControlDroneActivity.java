@@ -516,6 +516,11 @@ public class ControlDroneActivity
         });
     }
 
+    public void doMarkNorthClick(){
+        System.out.println("in click");
+        view.doMarkNorthClick();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {

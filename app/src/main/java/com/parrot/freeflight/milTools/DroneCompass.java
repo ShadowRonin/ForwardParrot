@@ -21,7 +21,7 @@ import android.content.Context;
 public class DroneCompass {
     
     private double northInDegMag;
-    private double latestRotZ;
+    private static double latestRotZ;
     private boolean fileFound;
     private Context contexM;
     private File dataFile;
@@ -41,7 +41,7 @@ public class DroneCompass {
     }
 
     /* Nav data updates this as frequently as it wants */
-    public void updateRotZ(double rotZ) {
+    public static void updateRotZ(double rotZ) {
         latestRotZ = rotZ;
         Log.w("BestDroneTeam", String.valueOf(rotZ));
         System.out.println("ROTZ " + rotZ);

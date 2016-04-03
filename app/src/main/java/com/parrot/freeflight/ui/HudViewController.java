@@ -8,8 +8,12 @@
 package com.parrot.freeflight.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -41,6 +45,8 @@ import com.parrot.freeflight.video.VideoStageRenderer;
 import com.parrot.freeflight.video.VideoStageView;
 import com.parrot.freeflight.milTools.*;
 
+import static com.parrot.freeflight.R.drawable.gps_device;
+import static com.parrot.freeflight.R.drawable.north_icon;
 import static com.parrot.freeflight.milTools.DroneCompass.*;
 
 public class HudViewController 
@@ -79,6 +85,7 @@ public class HudViewController
     private static final int OVERLAY_ID = 20;
     private static final int LEFTTEXT_ID=21;
     private static final int RIGHTTEXT_ID =22;
+	private static final int markNorth_ID = 23;
 	
 	private Image bottomBarBg;
     private Image overlayImg;
@@ -91,6 +98,7 @@ public class HudViewController
 	private Button btnPhoto;
 	private Button btnBack;
 	private ToggleButton btnRecord;
+	private Button markNorth;
 	
 	private Button[] buttons;
 	
@@ -165,6 +173,14 @@ public class HudViewController
 		
 		btnBack = new Button(res, R.drawable.btn_back, R.drawable.btn_back_pressed, Align.TOP_LEFT);
 		btnBack.setMargin(0, 0, 0, res.getDimensionPixelOffset(R.dimen.hud_btn_back_margin_left));
+
+		markNorth = new Button(res, north_icon, north_icon, Align.BOTTOM_LEFT);
+		/*Drawable dr = res.getDrawable(gps_device);
+		Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+// Scale it to 50 x 50
+		//dr.setBounds(0,0,25, 25);
+		Drawable d = new BitmapDrawable(, Bitmap.createScaledBitmap(bitmap, 50, 50, true));*/
+		markNorth.setMargin(0, 250, 0, 300);
 		
 		btnEmergency = new Button(res, R.drawable.btn_emergency_normal, R.drawable.btn_emergency_pressed, Align.TOP_CENTER);
 		btnTakeOff = new Button(res, R.drawable.btn_take_off_normal, R.drawable.btn_take_off_pressed, Align.BOTTOM_CENTER);		
@@ -208,7 +224,7 @@ public class HudViewController
 		prevRemainingTime = -1;
 		txtUsbRemaining = new Text(context, "KO", Align.TOP_RIGHT);
 		txtUsbRemaining.setMargin(res.getDimensionPixelOffset(R.dimen.hud_usb_indicator_text_margin_top),
-                res.getDimensionPixelOffset(R.dimen.hud_usb_indicator_text_margin_right), 0, 0);
+				res.getDimensionPixelOffset(R.dimen.hud_usb_indicator_text_margin_right), 0, 0);
 		txtUsbRemaining.setTypeface(TYPEFACE.Helvetica(context));
 		txtUsbRemaining.setTextSize(res.getDimensionPixelSize(R.dimen.hud_usb_indicator_text_size));
 		
@@ -226,7 +242,7 @@ public class HudViewController
 		
 		txtBatteryStatus = new Text(context, "0%", Align.TOP_LEFT);
 		txtBatteryStatus.setMargin((int) res.getDimension(R.dimen.hud_battery_text_margin_top), 0, 0,
-                (int) res.getDimension(R.dimen.hud_battery_indicator_margin_left) + batteryIndicator.getWidth());
+				(int) res.getDimension(R.dimen.hud_battery_indicator_margin_left) + batteryIndicator.getWidth());
 		txtBatteryStatus.setTextColor(Color.WHITE);
 		txtBatteryStatus.setTypeface(TYPEFACE.Helvetica(context));
 		txtBatteryStatus.setTextSize((int) res.getDimension(R.dimen.hud_battery_text_size));
@@ -242,7 +258,7 @@ public class HudViewController
 		wifiIndicator = new Indicator(res, wifiIndicatorRes, Align.TOP_LEFT);
 		wifiIndicator.setMargin(0, 0, 0, (int)res.getDimension(R.dimen.hud_wifi_indicator_margin_left));
 		
-		buttons = new Button[8];
+		buttons = new Button[9];
 		buttons[0] = btnSettings;
 		buttons[1] = btnEmergency;
 		buttons[2] = btnTakeOff;
@@ -251,6 +267,7 @@ public class HudViewController
 		buttons[5] = btnRecord;
 		buttons[6] = btnCameraSwitch;
 		buttons[7] = btnBack;
+		buttons[8] = markNorth;
 		
 		
 		txtAlert = new Text(context, "", Align.TOP_CENTER);
@@ -277,6 +294,7 @@ public class HudViewController
 		renderer.addSprite(PHOTO_ID, btnPhoto);
 		renderer.addSprite(RECORD_ID, btnRecord);
 		renderer.addSprite(CAMERA_ID, btnCameraSwitch);
+		renderer.addSprite(markNorth_ID, markNorth);
 		renderer.addSprite(ALERT_ID, btnEmergency);
 		renderer.addSprite(TAKE_OFF_ID, btnTakeOff);
 		renderer.addSprite(LAND_ID, btnLand);
@@ -288,6 +306,7 @@ public class HudViewController
 		renderer.addSprite(USB_INDICATOR_ID, usbIndicator);
 		renderer.addSprite(USB_INDICATOR_TEXT_ID, txtUsbRemaining);
         renderer.addSprite(OVERLAY_ID, overlayImg);
+
         //renderer.addSprite(LEFTTEXT_ID, leftText);
         //renderer.addSprite(RIGHTTEXT_ID, rightText);
 
@@ -528,6 +547,10 @@ public class HudViewController
 	{
 		btnCameraSwitch.setEnabled(enabled);
 	}
+
+	public void setNorth (boolean enabled){
+		markNorth.setEnabled(enabled);
+	}
 	
 	
 	public void setRecordButtonEnabled(boolean enabled)
@@ -618,6 +641,8 @@ public class HudViewController
 	public void setSettingsButtonClickListener(OnClickListener listener)
 	{
 		this.btnSettings.setOnClickListener(listener);
+
+
 	}
 	
 	
@@ -625,7 +650,28 @@ public class HudViewController
 	{
 		this.btnCameraSwitch.setOnClickListener(listener);
 	}
-	
+
+
+	public void setMarkNorthClickListener(OnClickListener listener){
+		//this.markNorth.setOnClickListener(listener);
+
+		markNorth.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				DroneCompass compass = new DroneCompass(context);
+				compass.markNorth();
+			}
+		});
+
+	}
+
+	public void doMarkNorthClick(){
+		System.out.println("north click");
+		DroneCompass compass = new DroneCompass(context);
+		compass.markNorth();
+	}
+
+
 	
 	public void setDoubleTapClickListener(OnDoubleTapListener listener) 
 	{
@@ -660,7 +706,11 @@ public class HudViewController
 	public boolean onTouch(View v, MotionEvent event)
 	{
 		boolean result = false;
-		
+
+		if (buttons[8].processTouch(v, event)){
+			doMarkNorthClick();
+		}
+
 		for (int i=0; i<buttons.length; ++i) {
 			if (buttons[i].processTouch(v, event)) {
 				result = true;
