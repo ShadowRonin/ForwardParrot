@@ -1,4 +1,7 @@
 package com.parrot.freeflight.milTools;
+
+import android.util.Log;
+
 public class DroneCompass {
     
     private static double northInDegMag = 0.0;
@@ -8,6 +11,7 @@ public class DroneCompass {
     /* Nav data updates this as frequently as it wants */
     public static void updateRotZ(double rotZ) {
         latestRotZ = rotZ;
+        Log.w("BestDroneTeam", String.valueOf(rotZ));
         System.out.println("ROTZ " + rotZ);
     }
     

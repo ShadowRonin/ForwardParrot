@@ -179,7 +179,7 @@ public class HudViewController
 		bottomBarBg.setSizeParams(SizeParams.FILL_SCREEN, SizeParams.NONE);
 		bottomBarBg.setAlphaEnabled(false);
 
-        overlayImg = new Image(res, R.drawable.shortimg, Align.CENTER);
+        overlayImg = new Image(res, R.drawable.finalpic, Align.CENTER);
         overlayImg.setSizeParams(SizeParams.FILL_SCREEN, SizeParams.NONE);
         overlayImg.setAlphaEnabled(true);
 

@@ -60,14 +60,12 @@ public class textUpdateThread extends Thread {
         //DroneGps gps = new DroneGps(context);
 
         while (true){
-            //rightText.setText(gps.getEightGrid());
-            System.out.println("In while loop??");
+            rightText.setText("4801 2605");
             leftText.setText("" + DroneCompass.getAzimuthInMils());
             renderer.addSprite(LEFTTEXT_ID, leftText);
-            //renderer.addSprite(RIGHTTEXT_ID, rightText);
+            renderer.addSprite(RIGHTTEXT_ID, rightText);
             try {
                 Thread.sleep(300);
-                System.out.println("sleep");
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 return;
